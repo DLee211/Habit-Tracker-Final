@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.VisualBasic;
 
-namespace habit_tracker
+namespace Habit_Tracker_Final
 {
     class Program
     {
@@ -15,7 +15,7 @@ namespace habit_tracker
 
                 var tableCmd = connection.CreateCommand();
                 
-                tableCmd.CommandText = @"CREATE TABLE IF NOT EXISTS drinking_water (
+                tableCmd.CommandText = @"CREATE TABLE IF NOT EXISTS drinking_water(
                                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         Date TEXT, 
                                         Quantity INTEGER)";

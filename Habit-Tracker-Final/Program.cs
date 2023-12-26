@@ -24,6 +24,8 @@ namespace habit_tracker
 
                 connection.Close();
             }
+
+            Engine.GetUserInput();
         }
     }
 }

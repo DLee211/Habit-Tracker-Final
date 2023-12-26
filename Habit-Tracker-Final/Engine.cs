@@ -1,6 +1,6 @@
 using Microsoft.Data.Sqlite;
 
-namespace habit_tracker;
+namespace Habit_Tracker_Final;
 
 public class Engine
 {
@@ -30,12 +30,38 @@ public class Engine
             case "2":
                 InsertRecords();
                 break;
-            // case "3":
-            //     DeleteRecords();
-            //     break;
+             case "3":
+                 DeleteRecords();
+                 break;
             // case "4":
             //     UpdateRecords();
             //     break;
+        }
+    }
+
+    private static void DeleteRecords()
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            Console.WriteLine("Enter the id of the row you want to delete:");
+            string id = Console.ReadLine();
+            int Id;
+
+            while (!int.TryParse(id, out Id))
+            {
+                Console.WriteLine("Id has to be an integer!");
+                id = Console.ReadLine();
+            }
+            connection.Open();
+
+            var tableCmd = connection.CreateCommand();
+
+            tableCmd.CommandText = $"DELETE FROM drinking_water WHERE Id = '{Id}'";
+
+            tableCmd.ExecuteNonQuery();
+            
+            connection.Close();
+
         }
     }
 
@@ -44,7 +70,7 @@ public class Engine
         using (var connection = new SqliteConnection(connectionString))
         {
 
-            string date = GetDateInput();
+            DateTime date = GetDateInput();
 
             int quantity = GetQuantityInput();
             
@@ -52,7 +78,11 @@ public class Engine
 
             var tableCmd = connection.CreateCommand();
 
-            //tableCmd.CommandText = "INSERT INTO drinking_water (CURRENT_DATE, Q)";
+            tableCmd.CommandText = $"INSERT INTO drinking_water(Date,Quantity) VALUES('{date}','{quantity}')";
+
+            tableCmd.ExecuteNonQuery();
+            
+            connection.Close();
         }
     }
 
@@ -66,25 +96,26 @@ public class Engine
         while (!int.TryParse(glasses, out quantity))
         {
             Console.WriteLine("Must be an integer!:");
-            Console.ReadLine();
+            glasses = Console.ReadLine();
         }
 
         return quantity;
     }
 
-    private static string GetDateInput()
+    private static DateTime GetDateInput()
     {
         Console.WriteLine("Enter Date: dd/MM/yyyy");
 
         string date = Console.ReadLine();
+        DateTime dt;
 
         while (!DateTime.TryParseExact(date, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None,
-                   out DateTime dt))
+                   out dt))
         {
             Console.WriteLine("Invalid date, please retry: dd/MM/yyyy");
             date = Console.ReadLine();
         }
-
-        return date;
+    
+        return dt;
     }
 }

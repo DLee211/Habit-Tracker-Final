@@ -50,7 +50,29 @@ public class Engine
     {
         using (var connection = new SqliteConnection(connectionString))
         {
+            connection.Open();
+            ViewRecords();
+            Console.WriteLine("Enter the id of the row you want to update:");
+            string id = Console.ReadLine();
+            int Id;
+
+            while (!int.TryParse(id, out Id))
+            {
+                Console.WriteLine("Id has to be an integer!");
+                id = Console.ReadLine();
+            }
+
+            DateTime date = GetDateInput();
+
+            int quantity = GetQuantityInput();
             
+            var tableCmd = connection.CreateCommand();
+
+            tableCmd.CommandText = $"UPDATE drinking_water SET Date = '{date}', Quantity= '{quantity}' WHERE Id = '{Id}';";
+
+            tableCmd.ExecuteNonQuery();
+            
+            connection.Close();
         }
     }
 
@@ -84,6 +106,7 @@ public class Engine
             else
             {
                 Console.WriteLine("No rows found");
+                GetUserInput();
             }
 
             connection.Close();

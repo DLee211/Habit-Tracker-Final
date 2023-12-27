@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.Data.Sqlite;
 
 namespace Habit_Tracker_Final;
@@ -47,12 +48,44 @@ public class Engine
 
     private static void ViewRecords()
     {
-        string query = "SELECT * FROM drinking_water";
+        Console.Clear();
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
-            
-            
+            var tableCmd = connection.CreateCommand();
+            tableCmd.CommandText =
+                $"SELECT * FROM drinking_water ";
+
+            List<DrinkingWater> tableData = new();
+
+            SqliteDataReader reader = tableCmd.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    tableData.Add(
+                        new DrinkingWater
+                        {
+                            Id = reader.GetInt32(0),
+                            Date = reader.GetDateTime(1),
+                            Quantity = reader.GetInt32(2),
+                        }); ;
+                }
+            }
+            else
+            {
+                Console.WriteLine("No rows found");
+            }
+
+            connection.Close();
+
+            Console.WriteLine("------------------------------------------\n");
+            foreach (var dw in tableData)
+            {
+                Console.WriteLine($"{dw.Id} - {dw.Date} - Quantity: {dw.Quantity}");
+            }
+            Console.WriteLine("------------------------------------------\n");
         }
     }
 
@@ -73,7 +106,7 @@ public class Engine
 
             var tableCmd = connection.CreateCommand();
 
-            tableCmd.CommandText = $"DELETE FROM drinking_water WHERE Id = '{Id}'";
+            tableCmd.CommandText = $"DELETE FROM drinking_water WHERE Id = '{Id}';VACUUM;";
 
             tableCmd.ExecuteNonQuery();
             
@@ -135,4 +168,11 @@ public class Engine
     
         return dt;
     }
+}
+
+internal class DrinkingWater
+{
+    public int Id;
+    public DateTime Date;
+    public int Quantity;
 }

@@ -48,6 +48,10 @@ public class Engine
 
     private static void UpdateRecords()
     {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            
+        }
     }
 
     private static void ViewRecords()

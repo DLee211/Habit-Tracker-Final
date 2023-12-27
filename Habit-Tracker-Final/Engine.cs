@@ -39,11 +39,15 @@ public class Engine
                 case "3":
                     DeleteRecords();
                     break;
-                // case "4":
-                //     UpdateRecords();
-                //     break;
+                case "4":
+                     UpdateRecords();
+                     break;
             }
         }
+    }
+
+    private static void UpdateRecords()
+    {
     }
 
     private static void ViewRecords()
@@ -93,6 +97,7 @@ public class Engine
     {
         using (var connection = new SqliteConnection(connectionString))
         {
+            ViewRecords();
             Console.WriteLine("Enter the id of the row you want to delete:");
             string id = Console.ReadLine();
             int Id;
